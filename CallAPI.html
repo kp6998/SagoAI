@@ -1,0 +1,161 @@
+<head>
+    <title>Sago AI</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="https://solace.bristlecone.com/wp-content/themes/iMagMag/solace-favicon.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<style>
+    .d-block {
+        display: block!important;
+    }
+    .d-none {
+        display: none!important;
+    }
+
+    .loader {
+        border: 5px solid #000000;
+        border-radius: 50%;
+        border-top: 5px solid #3498db;
+        border-bottom: 5px solid #3498db;
+        width: 35px;
+        height: 35px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        margin-right: 10px;
+    }
+
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+<body>
+    <div>
+        <div>
+        <img src="images/Bristlecone_Logo_CMYK_Black.png" alt="bconeLogo" style="width: 30%; margin-top: 5%;"/>
+      </div>
+        <div>
+          <h3>Welcome to ChatGpt in Life Sciences Industry!&#128578;</h3>
+        </div>
+      </div>
+      <div>
+      <div class="container">
+        <div class="chat-header">
+          <div class="logo">
+            <img src="images/chatbot1.png" alt="chatboticon" />
+          </div>
+          <div class="title">Let's Chat</div>
+          <div class="closeBtn">&#10006;</div>
+        </div>
+        <div class="chat-body"></div>
+        <div class="chat-input">
+          <div class="input-sec">
+            <input type="text" id="txtInput" placeholder="Type here" autofocus />
+          </div>
+          <div class="send" onclick="CallAPI()">
+            <img src="images/send.svg" alt="send" />
+          </div>
+          <div class="loader" hidden></div>
+        </div>
+      </div>
+      <div class="openChatBot">
+        <div class="logo">
+          <img src="images/chatbot1.png" alt="chatboticon" style="width: 100%;"/>
+        </div>
+        <span class="tooltiptext">Ask Sago&#129302;</span>
+      </div>
+      </div>
+</body>
+<script>
+    const chatBody = document.querySelector(".chat-body"); 
+    var count = 0;
+
+    $(document).ready(function(){
+        $('.openChatBot').show();
+        $('.container').hide();
+    });
+
+    $('.closeBtn').click(function(){
+        $('.openChatBot').show();
+        $('.container').hide();
+    });
+
+    $('.openChatBot').click(function(){
+        $('.openChatBot').hide();
+        $('.container').show();
+        $('.send').addClass('d-none');
+        $('.loader').addClass('d-block');
+        if(count == 0){
+        setTimeout(() => {
+            renderMessageEle("Hello there, This is Sago-Integrated with ChatGPT from AI team, How can I help you today?");
+            setScrollPosition();
+            $('.send').removeClass('d-none');
+            $('.loader').removeClass('d-block');
+        }, 1000);
+        count = 1;
+        }
+    });
+
+    const setScrollPosition = () => {
+        if (chatBody.scrollHeight > 0) {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    };
+
+    const renderMessageEle = (txt, type) => {
+        let className = "user-message";
+        if (type !== "user") {
+            className = "chatbot-message";
+        }
+        const messageEle = document.createElement("div");
+        const txtNode = document.createTextNode(txt);
+        messageEle.classList.add(className);
+        messageEle.append(txtNode);
+        chatBody.append(messageEle);
+        setScrollPosition();
+    };
+
+    $('input').on("keypress", function(e) {
+            /* ENTER PRESSED*/
+            if (e.keyCode == 13) {
+                /* FOCUS ELEMENT */
+                CallAPI();
+                return false;
+            }
+        });
+
+    function CallAPI(){
+        $('.send').addClass('d-none');
+        $('.loader').addClass('d-block');
+        var txtInput = $('#txtInput').val();
+        if(txtInput == '') {
+            return;
+        }
+        $('#txtInput').val('');
+        renderMessageEle(txtInput, "user");
+        $.ajax({
+                url: 'http://127.0.0.1:5000/my_api_endpoint',
+                type: 'GET',
+                data: {
+                    'param': txtInput
+                },
+                success: function(response) {
+                    renderMessageEle(response)
+                    $('.send').removeClass('d-none');
+                    $('.loader').removeClass('d-block');
+                },
+                error: function(error) {
+                    console.log(error);
+                    renderMessageEle("Sorry some error occured, Please retype the question agian or reach us TDteam@bristlecone.com")
+                    $('.send').removeClass('d-none');
+                    $('.loader').removeClass('d-block');
+                }
+            });
+
+    }
+</script>
