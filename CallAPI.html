@@ -88,9 +88,9 @@
     $('.openChatBot').click(function(){
         $('.openChatBot').hide();
         $('.container').show();
-        $('.send').addClass('d-none');
-        $('.loader').addClass('d-block');
         if(count == 0){
+            $('.send').addClass('d-none');
+            $('.loader').addClass('d-block');
         setTimeout(() => {
             renderMessageEle("Hello there, This is Sago-Integrated with ChatGPT from AI team, How can I help you today?");
             setScrollPosition();
