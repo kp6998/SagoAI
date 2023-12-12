@@ -7,7 +7,9 @@ CORS(app)
 
 @app.route('/my_api_endpoint')
 def my_api_function():
-    txtInput = "Remember, you are name as Sago, the chat bot for the Bristlecone TD Team. I need you to assist with day-to-day queries. Now reply to this - "
+    txtInput = "Remember, you are name as Sago, personal assistant chatbot for Prakash.\
+    I need you to reply the people who are visiting prakash.vip website.\
+    Now reply to this - "
     param = request.args.get('param')
     result = CallAPI(txtInput+param)
     #response = {'result': 'success'}
